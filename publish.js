@@ -219,6 +219,7 @@ function generate(type, title, docs, filename, resolveLinks) {
 
     if (resolveLinks) {
         html = helper.resolveLinks(html); // turn {@link foo} into <a href="foodoc.html">foo</a>
+		html = html.replace(/external:/g, '');
     }
 
     fs.writeFileSync(outpath, html, 'utf8');
@@ -289,10 +290,8 @@ function attachModuleSymbols(doclets, modules) {
 
 function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
     var nav = '';
-    var conf = env.conf.templates || {};
-    conf.default = conf.default || {};
 
-    if (items && items.length) {
+    if (items.length) {
         var itemsNav = '';
 
         items.forEach(function(item) {
@@ -303,21 +302,7 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
                 itemsNav += '<li>' + linktoFn('', item.name);
                 itemsNav += '</li>';
             } else if ( !hasOwnProp.call(itemsSeen, item.longname) ) {
-                var displayName;
-                if (!!conf.default.useLongnameInNav) {
-                    displayName = item.longname;
-                    if(conf.default.useLongnameInNav > 0 && conf.default.useLongnameInNav !== true){
-                        var num = conf.default.useLongnameInNav;
-                        var cropped = item.longname.split(".").slice(-num).join(".");
-                        if(cropped !== displayName){
-                            displayName = "..." + cropped;
-                        }
-                    }
-                } else {
-                    displayName = item.name;
-                }
-
-                itemsNav += '<li>' + linktoFn(item.longname, displayName.replace(/^module:/g, ''));
+                itemsNav += '<li>' + linktoFn(item.longname, item.name.replace(/^module:/, ''));
                 if (methods.length) {
                     itemsNav += "<ul class='methods'>";
 
@@ -369,13 +354,13 @@ function buildNav(members) {
     var seen = {};
     var seenTutorials = {};
 
+	nav += buildMemberNav(members.tutorials, 'Examples', seenTutorials, linktoTutorial);
     nav += buildMemberNav(members.classes, 'Classes', seen, linkto);
     nav += buildMemberNav(members.modules, 'Modules', {}, linkto);
     nav += buildMemberNav(members.externals, 'Externals', seen, linktoExternal);
     nav += buildMemberNav(members.events, 'Events', seen, linkto);
     nav += buildMemberNav(members.namespaces, 'Namespaces', seen, linkto);
     nav += buildMemberNav(members.mixins, 'Mixins', seen, linkto);
-    nav += buildMemberNav(members.tutorials, 'Tutorials', seenTutorials, linktoTutorial);
     nav += buildMemberNav(members.interfaces, 'Interfaces', seen, linkto);
 
     if (members.globals.length) {
@@ -661,13 +646,14 @@ exports.publish = function(taffyData, opts, tutorials) {
 
         // yes, you can use {@link} in tutorials too!
         html = helper.resolveLinks(html); // turn {@link foo} into <a href="foodoc.html">foo</a>
+		html = html.replace(/external:/g, '');
         fs.writeFileSync(tutorialPath, html, 'utf8');
     }
 
     // tutorials can have only one parent so there is no risk for loops
     function saveChildren(node) {
         node.children.forEach(function(child) {
-            generateTutorial('Tutorial: ' + child.title, child, helper.tutorialToUrl(child.name));
+            generateTutorial(/*'Example: ' + child.title*/'', child, helper.tutorialToUrl(child.name));
             saveChildren(child);
         });
     }
