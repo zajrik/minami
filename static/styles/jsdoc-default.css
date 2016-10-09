@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
+@import url(http://fonts.googleapis.com/css?family=Montserrat:400,700);
 
 * {
   box-sizing: border-box
@@ -250,7 +250,7 @@ footer {
 
 .details {
   margin-top: 14px;
-  border-left: 2px solid #DDD;
+  /*border-left: 2px solid #DDD;*/
   line-height: 30px;
 }
 
@@ -261,7 +261,7 @@ footer {
 }
 
 .details dd {
-   margin-left: 70px
+   margin-left: 0px
 }
 
 .details ul {
@@ -586,16 +586,5 @@ dl.param-type {
 
   footer {
     margin-left: 0;
-  }
-}
-
-@media only print {
-  nav {
-    display: none;
-  }
-
-  #main {
-    float: none;
-    width: 100%;
   }
 }

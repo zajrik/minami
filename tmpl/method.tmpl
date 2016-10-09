@@ -7,7 +7,7 @@ var self = this;
     <h2>Constructor</h2>
     <?js } ?>
 
-    <h4 class="name" id="<?js= id ?>"><?js= data.attribs + (kind === 'class' ? 'new ' : '') +
+    <h4 class="name" id="<?js= id ?>"><?js= data.attribs + (kind === 'class' ? 'new ' : '') + '.' +
     name + (data.signature || '') ?></h4>
 
     <?js if (data.summary) { ?>
@@ -15,6 +15,7 @@ var self = this;
     <?js } ?>
 <?js } ?>
 
+<div style="border-left: solid #e6e6e6; padding-left: 10px">
 <?js if (data.kind !== 'module' && data.description) { ?>
 <div class="description">
     <?js= data.description ?>
@@ -103,3 +104,4 @@ var self = this;
     <h5>Example<?js= examples.length > 1? 's':'' ?></h5>
     <?js= this.partial('examples.tmpl', examples) ?>
 <?js } ?>
+</div>
