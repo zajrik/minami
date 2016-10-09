@@ -219,7 +219,7 @@ function generate(type, title, docs, filename, resolveLinks) {
 
     if (resolveLinks) {
         html = helper.resolveLinks(html); // turn {@link foo} into <a href="foodoc.html">foo</a>
-		html = html.replace(/external:/g, '');
+		html = html.replace(/external:/g, '').replace(/([^n]>?)\.&lt;/g, '$1&lt;');
     }
 
     fs.writeFileSync(outpath, html, 'utf8');
@@ -646,7 +646,7 @@ exports.publish = function(taffyData, opts, tutorials) {
 
         // yes, you can use {@link} in tutorials too!
         html = helper.resolveLinks(html); // turn {@link foo} into <a href="foodoc.html">foo</a>
-		html = html.replace(/external:/g, '');
+		html = html.replace(/external:/g, '').replace(/([^n]>?)\.&lt;/g, '$1&lt;');
         fs.writeFileSync(tutorialPath, html, 'utf8');
     }
 
