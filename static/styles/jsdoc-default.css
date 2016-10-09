@@ -255,9 +255,9 @@ footer {
 }
 
 .details dt {
-   width: 120px;
+   /*width: 120px;*/
    float: left;
-   padding-left: 10px;
+   padding-left: 0px;
 }
 
 .details dd {
@@ -414,7 +414,8 @@ dl.param-type {
 }
 
 .param-type dt, .param-type dd {
-  display: inline-block
+  display: inline-block;
+  margin-left: 0px;
 }
 
 .param-type dd {

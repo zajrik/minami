@@ -30,12 +30,7 @@ var self = this;
 <?js } ?>
 
 <?js if (kind === 'event' && data.type && data.type.names) {?>
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            <?js= self.partial('type.tmpl', data.type.names) ?>
-        </li>
-    </ul>
+    <b>Type:</b> <?js= self.partial('type.tmpl', data.type.names) ?>
 <?js } ?>
 
 <?js if (data['this']) { ?>
@@ -91,7 +86,7 @@ var self = this;
 } } ?>
 
 <?js if (data.returns && returns.length) { ?>
-<h5>Returns:</h5>
+<b>Returns:</b>
 <?js if (returns.length > 1) { ?><ul><?js
     returns.forEach(function(r) { ?>
         <li><?js= self.partial('returns.tmpl', r) ?></li>
