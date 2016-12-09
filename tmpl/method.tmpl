@@ -9,7 +9,7 @@ var self = this;
 
     <h4 class="name" id="<?js= id ?>">
 		<?js= data.attribs + (kind === 'class'
-		? 'new ' : '.') ?><a href='#<?js= name ?>' style='color: black'><?js= name ?></a><?js= (data.signature || '') ?>
+		? 'new ' : name.indexOf('event:') === 0 ? '' : '.') ?><a href='#<?js= name ?>' style='color: black'><?js= name.replace('event:', '') ?></a><?js= (data.signature || '') ?>
 	</h4>
 
     <?js if (data.summary) { ?>

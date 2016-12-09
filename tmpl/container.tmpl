@@ -72,6 +72,17 @@
         <?js= self.partial('augments.tmpl', doc) ?>
     <?js } ?>
 
+    <?js
+        var events = self.find({kind: 'event', memberof: isGlobalPage ? {isUndefined: true} : doc.longname});
+        if (events && events.length && events.forEach) {
+    ?>
+        <h3 class="subsection-title">Events</h3>
+
+        <?js events.forEach(function(e) { ?>
+            <?js= self.partial('method.tmpl', e) ?>
+        <?js }); ?>
+    <?js } ?>
+
     <?js if (doc.requires && doc.requires.length) { ?>
         <h3 class="subsection-title">Requires</h3>
 
@@ -163,17 +174,6 @@
             <?js
                 }
             }); ?>
-    <?js } ?>
-
-    <?js
-        var events = self.find({kind: 'event', memberof: isGlobalPage ? {isUndefined: true} : doc.longname});
-        if (events && events.length && events.forEach) {
-    ?>
-        <h3 class="subsection-title">Events</h3>
-
-        <?js events.forEach(function(e) { ?>
-            <?js= self.partial('method.tmpl', e) ?>
-        <?js }); ?>
     <?js } ?>
 </article>
 
