@@ -303,17 +303,17 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
                 itemsNav += '</li>';
             } else if ( !hasOwnProp.call(itemsSeen, item.longname) ) {
                 itemsNav += '<li>' + linktoFn(item.longname, item.name.replace(/^module:/, ''));
-                if (methods.length) {
-                    itemsNav += "<ul class='methods'>";
+                // if (methods.length) {
+                //     itemsNav += "<ul class='methods'>";
 
-                    methods.forEach(function (method) {
-                        itemsNav += "<li data-type='method'>";
-                        itemsNav += linkto(method.longname, method.name);
-                        itemsNav += "</li>";
-                    });
+                //     methods.forEach(function (method) {
+                //         itemsNav += "<li data-type='method'>";
+                //         itemsNav += linkto(method.longname, method.name);
+                //         itemsNav += "</li>";
+                //     });
 
-                    itemsNav += "</ul>";
-                }
+                //     itemsNav += "</ul>";
+                // }
                 itemsNav += '</li>';
                 itemsSeen[item.longname] = true;
             }
