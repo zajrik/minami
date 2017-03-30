@@ -356,31 +356,32 @@ function buildNav(members) {
 
 	nav += buildMemberNav(members.tutorials, 'Examples', seenTutorials, linktoTutorial);
     nav += buildMemberNav(members.classes, 'Classes', seen, linkto);
+    nav += buildMemberNav(members.interfaces, 'Interfaces', seen, linkto);
     nav += buildMemberNav(members.modules, 'Modules', {}, linkto);
-    nav += buildMemberNav(members.externals, 'Externals', seen, linktoExternal);
-    // nav += buildMemberNav(members.events, 'Events', seen, linkto);
     nav += buildMemberNav(members.namespaces, 'Namespaces', seen, linkto);
     nav += buildMemberNav(members.mixins, 'Mixins', seen, linkto);
-    nav += buildMemberNav(members.interfaces, 'Interfaces', seen, linkto);
+	nav += buildMemberNav(members.globals, 'TypeDefs', seen, linkto);
+    // nav += buildMemberNav(members.events, 'Events', seen, linkto);
+    nav += buildMemberNav(members.externals, 'Externals', seen, linktoExternal);
 
-    if (members.globals.length) {
-        var globalNav = '';
+    // if (members.globals.length) {
+    //     var globalNav = '';
 
-        members.globals.forEach(function(g) {
-            if ( g.kind !== 'typedef' && !hasOwnProp.call(seen, g.longname) ) {
-                globalNav += '<li>' + linkto(g.longname, g.name) + '</li>';
-            }
-            seen[g.longname] = true;
-        });
+    //     members.globals.forEach(function(g) {
+    //         if ( g.kind === 'typedef' ) {
+    //             globalNav += '<li>' + linkto(g.longname, g.name) + '</li>';
+    //         }
+    //         seen[g.longname] = true;
+    //     });
 
-        if (!globalNav) {
-            // turn the heading into a link so you can actually get to the global page
-            nav += '<h3>' + linkto('global', 'Global') + '</h3>';
-        }
-        else {
-            nav += '<h3>Global</h3><ul>' + globalNav + '</ul>';
-        }
-    }
+    //     if (!globalNav) {
+    //         // turn the heading into a link so you can actually get to the global page
+    //         nav += '<h3>' + linkto('global', 'TypeDefs') + '</h3>';
+    //     }
+    //     else {
+    //         nav += '<h3>TypeDefs</h3><ul>' + globalNav + '</ul>';
+    //     }
+    // }
 
     return nav;
 }
