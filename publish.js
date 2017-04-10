@@ -354,7 +354,7 @@ function buildNav(members) {
     var seen = {};
     var seenTutorials = {};
 
-	nav += buildMemberNav(members.tutorials, 'Examples', seenTutorials, linktoTutorial);
+    nav += buildMemberNav(members.tutorials, 'Pages', seenTutorials, linktoTutorial);
     nav += buildMemberNav(members.classes, 'Classes', seen, linkto);
     nav += buildMemberNav(members.interfaces, 'Interfaces', seen, linkto);
     nav += buildMemberNav(members.mixins, 'Mixins', seen, linkto);
