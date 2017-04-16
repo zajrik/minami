@@ -20,6 +20,9 @@
 <section>
 
 <header>
+	<?js if (doc.kind === 'module') { ?>
+		<h2><?js= doc.name ?></h2>
+	<?js } ?>
     <?js if (!doc.longname || doc.kind !== 'module') { ?>
         <h2><?js if (doc.ancestors && doc.ancestors.length) { ?>
             <span class="ancestors"><?js= doc.ancestors.join('') ?></span>
@@ -149,8 +152,11 @@
         var methods = self.find({kind: 'function', memberof: isGlobalPage ? {isUndefined: true} : doc.longname});
         if (methods && methods.length && methods.forEach) {
     ?>
+	<?js if (isGlobalPage) { ?>
+		<h3 class="subsection-title">Decorators</h3>
+	<?js } else { ?>
         <h3 class="subsection-title">Methods</h3>
-
+	<?js } ?>
         <?js methods.forEach(function(m) { ?>
             <?js= self.partial('method.tmpl', m) ?>
         <?js }); ?>

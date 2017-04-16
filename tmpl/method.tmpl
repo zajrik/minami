@@ -9,7 +9,10 @@ var self = this;
 
     <h4 class="name" id="<?js= id ?>">
 		<?js= data.attribs + (kind === 'class'
-		? 'new ' : name.indexOf('event:') === 0 ? '' : '.') ?><a href='#<?js= name ?>' style='color: black'><?js= name.replace('event:', '') ?></a><?js= (data.signature || '') ?>
+			? 'new ' : name.indexOf('event:') === 0
+			? '' : data.scope === 'global' ? '' : '.') ?><a href='#<?js= name ?>' style='color: black'><?js= name.replace('event:', '') ?></a><?js=
+				(data.signature ? data.signature.includes('<span class="signature">()</span>') && (!data.memberof && data.kind !== 'class')
+					? '' : data.signature : '') ?>
 	</h4>
 
     <?js if (data.summary) { ?>
@@ -86,7 +89,11 @@ var self = this;
 } } ?>
 
 <?js if (data.returns && returns.length) { ?>
-<b>Returns:</b>
+	<?js if (data.scope === 'global') { ?>
+		<b>Decorator type:</b>
+	<?js } else { ?>
+		<b>Returns:</b>
+	<?js } ?>
 <?js if (returns.length > 1) { ?><ul><?js
     returns.forEach(function(r) { ?>
         <li><?js= self.partial('returns.tmpl', r) ?></li>

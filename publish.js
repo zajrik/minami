@@ -135,8 +135,11 @@ function addNonParamAttributes(items) {
 }
 
 function addSignatureParams(f) {
-    var params = f.params ? addParamAttributes(f.params) : [];
-    f.signature = util.format( '%s(%s)', (f.signature || ''), params.join(', ') );
+    // var params = f.params ? addParamAttributes(f.params) : [];
+    f.signature = util.format('%s(%s)', (f.signature || ''), (f.params || []).map(a =>
+		`<span class="param-types">${a.name}${a.optional ? '?' : ''}: ${
+			linkto(a.type.names[0].split('.')[0], a.type.names[0].split('.')[0])}${
+				a.type.names[0].split('.')[1] ? htmlsafe(a.type.names[0].split('.')[1]) : ''}</span>`).join(', '));
 }
 
 function addSignatureReturns(f) {
@@ -164,7 +167,7 @@ function addSignatureReturns(f) {
         returnTypes = addNonParamAttributes(f.returns);
     }
     if (returnTypes.length) {
-        returnTypesString = util.format( ' &rarr; %s{%s}', attribsString, returnTypes.join('|') );
+        returnTypesString = util.format( ' &rarr; %s%s', attribsString, returnTypes.join('|') );
     }
 
     f.signature = '<span class="signature">' + (f.signature || '') + '</span>' +
@@ -360,9 +363,20 @@ function buildNav(members) {
     nav += buildMemberNav(members.mixins, 'Mixins', seen, linkto);
     nav += buildMemberNav(members.modules, 'Modules', {}, linkto);
     nav += buildMemberNav(members.namespaces, 'Namespaces', seen, linkto);
-	nav += buildMemberNav(members.globals, 'TypeDefs', seen, linkto);
+	const decoratorMembers = members.globals.filter(member => member.kind === 'function');
+	if (decoratorMembers.length)
+	{
+		let decorators = '<h3>Decorators</h3><ul>';
+		decoratorMembers.forEach(g => {
+			decorators += `<li>${linkto(g.longname, g.name)}</li>`
+		});
+		decorators += '</ul>'
+		nav += decorators;
+	}
+	nav += buildMemberNav(members.globals.filter(member => member.kind !== 'function'), 'TypeDefs', seen, linkto);
     // nav += buildMemberNav(members.events, 'Events', seen, linkto);
     nav += buildMemberNav(members.externals, 'Externals', seen, linktoExternal);
+
 
     // if (members.globals.length) {
     //     var globalNav = '';
