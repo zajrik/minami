@@ -9,6 +9,6 @@ if (data.description) {
 
 <?js if (data.type && data.type.names) {?>
 <span class="param-type">
-	<dd><?js= this.partial('type.tmpl', data.type.names) ?></dd>
+	<dd><?js= this.partial('type.tmpl', data.type.names).replace('(', '').replace(')', '').replace('|', ' | ') ?></dd>
 </span>
 <?js } ?>

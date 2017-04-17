@@ -1,7 +1,14 @@
 <?js
     var data = obj;
     var self = this;
+	// Reverse the foo[] -> Array<foo> transformation jsdoc does
+	// because it takes up entirely too much horizontal space
+	function replaceArray(str) {
+		const reg = /Array\.?&lt;((?:<a href="[^"]*">)?([a-zA-Z:]+)(?:<\/a>)?(?:\[\])*)>/;
+		while (reg.test(str)) str = str.replace(reg, "$1[]");
+		return str;
+	}
     data.forEach(function(name, i) { ?>
-<span class="param-type"><dd><?js= self.linkto(name, self.htmlsafe(name)) ?></dd></span>
+<span class="param-type"><dd><?js= replaceArray(self.linkto(name, self.htmlsafe(name))) ?></dd></span>
 <?js if (i < data.length-1) { ?>|<?js } ?>
 <?js }); ?>

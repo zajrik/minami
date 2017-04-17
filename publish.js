@@ -134,12 +134,22 @@ function addNonParamAttributes(items) {
     return types;
 }
 
+// Reverse the foo[] -> Array<foo> transformation jsdoc does
+// because it takes up entirely too much horizontal space
+function replaceArray(str) {
+	const reg = /Array\.?&lt;((?:<a href="[^"]*">)?([a-zA-Z:]+)(?:<\/a>)?(?:\[\])*)>/;
+	while (reg.test(str)) str = str.replace(reg, "$1[]");
+	return str;
+}
+
 function addSignatureParams(f) {
     // var params = f.params ? addParamAttributes(f.params) : [];
     f.signature = util.format('%s(%s)', (f.signature || ''), (f.params || []).map(a =>
 		`<span class="param-types">${a.name}${a.optional ? '?' : ''}: ${
 			linkto(a.type.names[0].split('.')[0], a.type.names[0].split('.')[0])}${
 				a.type.names[0].split('.')[1] ? htmlsafe(a.type.names[0].split('.')[1]) : ''}</span>`).join(', '));
+
+	f.signature = replaceArray(f.signature);
 }
 
 function addSignatureReturns(f) {
@@ -163,11 +173,13 @@ function addSignatureReturns(f) {
         attribsString = buildAttribsString(attribs);
     }
 
+
     if (f.returns) {
         returnTypes = addNonParamAttributes(f.returns);
     }
     if (returnTypes.length) {
-        returnTypesString = util.format( ' &rarr; %s%s', attribsString, returnTypes.join('|') );
+        returnTypesString = replaceArray(util.format( ' &rarr; %s%s', attribsString, returnTypes.join('|')
+			.replace('(', '').replace(')', '').replace('|', ' | ') ));
     }
 
     f.signature = '<span class="signature">' + (f.signature || '') + '</span>' +
@@ -179,6 +191,8 @@ function addSignatureTypes(f) {
 
     f.signature = (f.signature || '') + '<span class="type-signature">' +
         (types.length ? ': ' + types.join('|') : '') + '</span>';
+
+	f.signature = replaceArray(f.signature);
 }
 
 function addAttribs(f) {
