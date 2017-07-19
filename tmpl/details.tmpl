@@ -2,6 +2,10 @@
 var data = obj;
 var self = this;
 var defaultObjectClass = '';
+var sourcemap = data.meta ? data.meta.sourcemap : null;
+var convert = data.meta ? data.meta.convert : null;
+var fs = data.meta ? data.meta.fs : null;
+var linecolumn = data.meta ? data.meta.linecolumn : null;
 
 // Check if the default value is an object or array; if so, apply code highlighting
 if (data.defaultvalue && (data.defaultvaluetype === 'object' || data.defaultvaluetype === 'array')) {
@@ -110,7 +114,23 @@ if (data.defaultvalue && (data.defaultvaluetype === 'object' || data.defaultvalu
     <?js if (data.meta && self.outputSourceFiles) {?>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <?js= self.linkto(meta.shortpath) ?>, <?js= self.linkto(meta.shortpath, 'line ' + meta.lineno, null, 'line' + meta.lineno) ?>
+		<?js
+			let type = process.env.TYPE === 'stable' ? 'stable' : 'master';
+			if (sourcemap)
+			{
+				meta.shortpath = meta.shortpath.replace(/\.js$/, '.ts');
+				const file = meta.path + '/' + meta.filename;
+				const code = fs.readFileSync(file).toString();
+				const map = convert.fromSource(code).toJSON(); 
+				const src = new sourcemap.SourceMapConsumer(map);
+				const column = linecolumn(code).fromIndex(meta.range[0]);
+				meta.lineno = src.originalPositionFor({ line: meta.lineno, column: column ? column.col : 1 }).line;
+			}
+			let lineText = meta.lineno > 0 ? ', Line ' + meta.lineno : '';
+
+		?>
+        <a href="https://github.com/zajrik/yamdbf/blob/<?js= type?>/src/<?js= meta.shortpath ?>#L<?js=
+			meta.lineno ?>"><?js= meta.shortpath ?><?js= lineText ?></a>
     </li></ul></dd>
     <?js } ?>
 

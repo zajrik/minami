@@ -251,10 +251,20 @@ function generateSourceFiles(sourceFiles, encoding) {
         helper.registerLink(sourceFiles[file].shortened, sourceOutfile);
 
         try {
+			const sourcemap = require('source-map');
+			const convert = require('convert-source-map');
+			let code;
+			try { code = fs.readFileSync(sourceFiles[file].resolved, encoding); }
+			catch (err) { console.log(err); }
+			const map = convert.fromSource(code).toJSON(); 
+			const src = new sourcemap.SourceMapConsumer(map);
+			let tsFile = /(\/src.+)/.test(src.sources[0]) ? src.sources[0].match(/(\/src.+)/)[1] : null;
+			let newFile = tsFile ? sourceFiles[file].resolved.replace(/\/bin.+/, tsFile) : null;
+
             source = {
                 kind: 'source',
-                code: helper.htmlsafe( fs.readFileSync(sourceFiles[file].resolved, encoding) )
-            };
+                code: helper.htmlsafe( fs.readFileSync(newFile || sourceFiles[file].resolved, encoding) )
+			};
         }
         catch(e) {
             logger.error('Error while generating source file %s: %s', file, e.message);
@@ -544,7 +554,11 @@ exports.publish = function(taffyData, opts, tutorials) {
             docletPath = getPathFromDoclet(doclet);
             docletPath = sourceFiles[docletPath].shortened;
             if (docletPath) {
-                doclet.meta.shortpath = docletPath;
+				doclet.meta.shortpath = docletPath;
+				doclet.meta.sourcemap = require('source-map');
+				doclet.meta.convert = require('convert-source-map');
+				doclet.meta.linecolumn = require('line-column');
+				doclet.meta.fs = require('fs');
             }
         }
     });
