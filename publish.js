@@ -377,7 +377,11 @@ function linktoExternal(longName, name) {
  * @return {string} The HTML for the navigation sidebar.
  */
 function buildNav(members) {
-    var nav = '<h2><a href="/index.html">Stable</a><a href="/indev/index.html">Indev</a></h2>';
+    if (!env.conf.templates.useHomeLink) {
+	var nav = '<h2><a href="/index.html">Stable</a><a href="/indev/index.html">Indev</a></h2>';
+    } else {
+	var nav = '<h2><a href="index.html">Home</a></h2>';
+    }
     var seen = {};
     var seenTutorials = {};
 
@@ -398,7 +402,7 @@ function buildNav(members) {
 		nav += decorators;
 	}
 	nav += buildMemberNav(members.globals.filter(member => member.kind !== 'function'), 'TypeDefs', seen, linkto);
-    // nav += buildMemberNav(members.events, 'Events', seen, linkto);
+    if (env.conf.templates.events) nav += buildMemberNav(members.events, 'Events', seen, linkto);
     nav += buildMemberNav(members.externals, 'Externals', seen, linktoExternal);
 
 
