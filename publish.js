@@ -556,11 +556,10 @@ exports.publish = function(taffyData, opts, tutorials) {
             docletPath = getPathFromDoclet(doclet);
             docletPath = sourceFiles[docletPath].shortened;
             if (docletPath) {
-				doclet.meta.shortpath = docletPath;
-				doclet.meta.sourcemap = require('source-map');
-				doclet.meta.convert = require('convert-source-map');
-				doclet.meta.linecolumn = require('line-column');
-				doclet.meta.fs = require('fs');
+                doclet.meta.shortpath = docletPath;
+                doclet.meta.sourcemap = require('source-map');
+                doclet.meta.linecolumn = require('line-column');
+                doclet.meta.fs = require('fs');
             }
         }
     });
