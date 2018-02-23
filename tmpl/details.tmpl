@@ -3,7 +3,6 @@ var data = obj;
 var self = this;
 var defaultObjectClass = '';
 var sourcemap = data.meta ? data.meta.sourcemap : null;
-var convert = data.meta ? data.meta.convert : null;
 var fs = data.meta ? data.meta.fs : null;
 var linecolumn = data.meta ? data.meta.linecolumn : null;
 
@@ -120,14 +119,12 @@ if (data.defaultvalue && (data.defaultvaluetype === 'object' || data.defaultvalu
 			{
 				meta.shortpath = meta.shortpath.replace(/\.js$/, '.ts');
 				const file = meta.path + '/' + meta.filename;
-				const code = fs.readFileSync(file).toString();
-				const map = convert.fromSource(code).toJSON(); 
+				const map = fs.readFileSync(file + '.map').toString();
 				const src = new sourcemap.SourceMapConsumer(map);
-				const column = linecolumn(code).fromIndex(meta.range[0]);
+				const column = linecolumn(map).fromIndex(meta.range[0]);
 				meta.lineno = src.originalPositionFor({ line: meta.lineno, column: column ? column.col : 1 }).line;
 			}
 			let lineText = meta.lineno > 0 ? ', Line ' + meta.lineno : '';
-
 		?>
         <a href="https://github.com/zajrik/yamdbf/blob/<?js= type?>/src/<?js= meta.shortpath ?>#L<?js=
 			meta.lineno ?>"><?js= meta.shortpath ?><?js= lineText ?></a>

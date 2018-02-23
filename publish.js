@@ -253,13 +253,14 @@ function generateSourceFiles(sourceFiles, encoding) {
         try {
 			const sourcemap = require('source-map');
 			const convert = require('convert-source-map');
-			let code;
-			try { code = fs.readFileSync(sourceFiles[file].resolved, encoding); }
-			catch (err) { console.log(err); }
-			const map = convert.fromSource(code).toJSON(); 
-			const src = new sourcemap.SourceMapConsumer(map);
-			let tsFile = /(\/src.+)/.test(src.sources[0]) ? src.sources[0].match(/(\/src.+)/)[1] : null;
-			let newFile = tsFile ? sourceFiles[file].resolved.replace(/\/bin.+/, tsFile) : null;
+
+            let map;
+            try { map = fs.readFileSync(sourceFiles[file].resolved + '.map', encoding); }
+            catch (err) { console.log(err); }
+
+            const src = new sourcemap.SourceMapConsumer(map);
+            const tsFile = /(\/src.+)/.test(src.sources[0]) ? src.sources[0].match(/(\/src.+)/)[1] : null;
+            const newFile = tsFile ? sourceFiles[file].resolved.replace(/\/bin.+/, tsFile) : null;
 
             source = {
                 kind: 'source',
